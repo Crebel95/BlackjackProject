@@ -32,6 +32,10 @@ public class Player {
 		int value = bjHand.getHandValue();
 		return value;
 	}
+	
+	public void printHandValue() {
+		System.out.println(name + " score: " + getHandValue());
+	}
 
 
 	public Hand getHand() {
@@ -49,6 +53,16 @@ public class Player {
 		} else {
 			return false;
 		}
+	}
+	
+	public boolean isBust() {
+		
+		if (getHandValue() > 21) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 	
 

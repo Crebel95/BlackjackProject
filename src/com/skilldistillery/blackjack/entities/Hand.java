@@ -24,7 +24,7 @@ public abstract class Hand {
 	public String toString() {
 		String output = "Cards: ";
 		for (Card card : hand) {
-			output += card + " ";
+			output += card + "  ";
 		}
 		return output;
 	}

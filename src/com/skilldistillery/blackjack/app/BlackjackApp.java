@@ -31,7 +31,10 @@ public class BlackjackApp {
 		player.getHand().addCard(deck);
 
 		dealer.viewPlayerHand();
+		dealer.printHandValue();
+		System.out.println(" ");
 		player.viewPlayerHand();
+		player.printHandValue();
 
 		// check cards for blackjack(player and dealer)... create 'if statement' for
 		// both scenarios
@@ -40,40 +43,54 @@ public class BlackjackApp {
 
 		while (running) {
 
-			if (player.isBlackjack()) {
-
-				if (dealer.isBlackjack()) {
-					System.out.println("Push! Both players have Blackjack.");
-				} else {
-					System.out.println("You beat the dealer with " + player.getHandValue() + " compared to "
-							+ dealer.getHandValue());
-				}
+			if (player.isBust() || dealer.isBust()) {
+				System.out.println("Player busts!");
+				running = false;
 			}
-			if (player.getHandValue() < 21) {
-				if (dealer.isBlackjack()) {
-					System.out.println("Dealer has Blackjack. Dealer wins!" + dealer.getHandValue());
-				} else {
-					System.out.println("Would you like to hit or hold? \n Press 1: hit \n Press 2: hold");
-					int userSelection = sc.nextInt();
 
-					if (userSelection == 1) {
-						System.out.println("You've chosen to hit!");
-						player.getHand().addCard(deck);
-						player.viewPlayerHand();
-					} else {
-						System.out.println("You've chosen to hold.");
-						running = false;
-					}
+			if (player.isBlackjack() || dealer.isBlackjack()) {
+
+				if (player.isBlackjack() && !(dealer.isBlackjack())) {
+					System.out.println("Player beats Dealer with Blackjack!");
+				}
+
+				if (dealer.isBlackjack() && !(player.isBlackjack())) {
+					System.out.println("Dealer beats Player with Blackjack!");
+				} else {
+					System.out.println("Push! Both Player and Dealer have Blackjack!");
 				}
 			}
 		}
+		if (player.getHandValue() < 21) {
 
+			System.out.println("Would you like to hit or hold? \n Press 1: hit \n Press 2: hold");
+			int userSelection = sc.nextInt();
+
+			if (userSelection == 1) {
+				System.out.println("You've chosen to hit!");
+				player.getHand().addCard(deck);
+				dealer.viewPlayerHand();
+				dealer.printHandValue();
+				System.out.println(" ");
+				player.viewPlayerHand();
+				player.printHandValue();
+			}
+			if (userSelection == 2) {
+				System.out.println("You've chosen to hold.");
+				running = false;
+			}
+			if (userSelection != 1 && userSelection != 2) {
+				System.err.println(
+						"Invalid option. Your selection must be either \"1\" or \"2\": \n Press 1: to hit \n Press 2: to hold ");
+			}
+
+		}
 	}
+
+}
 
 //	
 //	public Player determineWinner() {
 //
 //		return theWinner;
 //	}
-
-}
