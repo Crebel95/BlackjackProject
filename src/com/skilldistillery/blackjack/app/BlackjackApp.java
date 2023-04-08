@@ -18,6 +18,7 @@ public class BlackjackApp {
 
 	public void launch() {
 		Scanner sc = new Scanner(System.in);
+		BlackjackApp bja = new BlackjackApp();
 		Hand hand = new BlackjackHand();
 		Dealer dealer = new Dealer("Dealer", hand);
 		Player player = new Player("Player", new BlackjackHand());
@@ -36,10 +37,6 @@ public class BlackjackApp {
 		player.viewPlayerHand();
 		player.printHandValue();
 
-		// check cards for blackjack(player and dealer)... create 'if statement' for
-		// both scenarios
-		// if neither have blackjack, ask if they would like to hit or stand
-		// dealer must draw if less than 17
 
 		while (running) {
 
@@ -59,6 +56,7 @@ public class BlackjackApp {
 				if (dealer.isBlackjack() && (player.isBlackjack())) {
 					System.out.println("Push! Both Player and Dealer have Blackjack!");
 				}
+				break;
 			}
 
 			if (player.getHandValue() < 21) {
@@ -77,7 +75,7 @@ public class BlackjackApp {
 				}
 				if (userSelection == 2) {
 					System.out.println("You've chosen to hold.");
-					running = false;
+					
 				}
 				if (userSelection != 1 && userSelection != 2) {
 					System.err.println(
@@ -91,27 +89,37 @@ public class BlackjackApp {
 				dealer.printHandValue();
 
 			}
-			if (player.getHandValue() > 21) {
-				System.out.println("Player busts! The Dealer Wins!");
-			} else if (dealer.getHandValue() > 21) {
-				System.out.println("Dealer busts! Player wins!");
-			} else if (player.getHandValue() > dealer.getHandValue()) {
-				System.out.println("Player wins with a score of: ");
-				player.printHandValue();
-				System.out.println("to");
-				dealer.printHandValue();
-			} else if (dealer.getHandValue() > player.getHandValue()) {
-				System.out.println("Dealer wins with a score of: ");
-				player.printHandValue();
-				System.out.println("to");
-				dealer.printHandValue();
-			} else if (dealer.getHandValue() == player.getHandValue()) {
-				System.out.println("Push! The Dealer and Player have tied.");
-			}
+			bja.determineWinner(dealer,player);
+
 		}
 
 	}
 
-	
+	public Player determineWinner(Dealer dealer, Player player) {
+		Player theWinner = null;
+		if (dealer.isBust()) {
+			System.out.println("Dealer busts! Player Wins!");
+			theWinner = player;
+		}
+		if (player.isBust()) {
+			System.out.println("Player busts! Dealer Wins!");
+			theWinner = dealer;
+		}
+		if (player.getHandValue() > dealer.getHandValue()) {
+			System.out.println("Player wins!");
+			theWinner = player;
+		}
+		if (dealer.getHandValue() > player.getHandValue()) {
+			System.out.println("Dealer wins!");
+			theWinner = dealer;
+		}
+		if (player.getHandValue() == dealer.getHandValue()) {
+			System.out.println("Push! Game ends in a tie!");
+			theWinner = player;
+		}
+		
+		
+		return theWinner;
+	}
 
 }

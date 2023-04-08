@@ -18,6 +18,9 @@ public abstract class Hand {
 	public void clear() {
 
 	}
+	public Card getCard(int index) {
+		return hand.get(0);
+	}
 
 	public abstract int getHandValue();
 
@@ -28,5 +31,6 @@ public abstract class Hand {
 		}
 		return output;
 	}
+
 
 }

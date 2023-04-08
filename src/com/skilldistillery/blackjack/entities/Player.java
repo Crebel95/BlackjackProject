@@ -2,7 +2,7 @@ package com.skilldistillery.blackjack.entities;
 
 public class Player {
 	protected String name;
-	private Hand hand;
+	protected Hand hand;
 	
 	public Player(String name, Hand hand) {
 		this.name = name;
@@ -41,7 +41,7 @@ public class Player {
 	public Hand getHand() {
 		return hand;
 	}
-	
+
 
 	public void setHand(Hand hand) {
 		this.hand = hand;
