@@ -5,9 +5,12 @@ public class BlackjackHand extends Hand {
 	public BlackjackHand() {
 
 	}
-
-	public int getHandValue(int rank) {
-		return rank;
+    @Override
+	public int getHandValue(){
+		int value = 0;
+		for (Card card : hand) {
+			value += card.getValue().getValue();
+		}return value;
 	}
 
 	public boolean isBlackjack() {

@@ -26,15 +26,29 @@ public class Player {
 	public void receiveCard(Deck card) {
 		hand.addCard(card);
 	}
+	
+	public int getHandValue() {
+		BlackjackHand bjHand = (BlackjackHand) hand;
+		int value = bjHand.getHandValue();
+		return value;
+	}
 
 
 	public Hand getHand() {
 		return hand;
 	}
-
+	
 
 	public void setHand(Hand hand) {
 		this.hand = hand;
+	}
+	
+	public boolean isBlackjack() {
+		if (hand.getHandValue() == 21) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 

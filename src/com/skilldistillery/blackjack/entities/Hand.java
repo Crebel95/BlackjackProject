@@ -19,15 +19,10 @@ public abstract class Hand {
 
 	}
 
-	public int getHandValue() {
-		int value = 0;
-		for (Card card : hand) {
-			value += card.getValue();
-		}return value;
-	}
+	public abstract int getHandValue();
 
 	public String toString() {
-		String output = null;
+		String output = "Cards: ";
 		for (Card card : hand) {
 			output += card + " ";
 		}
