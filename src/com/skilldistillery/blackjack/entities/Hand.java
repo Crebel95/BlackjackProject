@@ -22,12 +22,13 @@ public abstract class Hand {
 		return hand.get(0);
 	}
 
+
 	public abstract int getHandValue();
 
 	public String toString() {
 		String output = "Cards: ";
 		for (Card card : hand) {
-			output += card + "  ";
+			output += "["+ card +"]" + "  ";
 		}
 		return output;
 	}
