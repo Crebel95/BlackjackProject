@@ -28,8 +28,7 @@ public class Player {
 	}
 	
 	public int getHandValue() {
-		BlackjackHand bjHand = (BlackjackHand) hand;
-		int value = bjHand.getHandValue();
+		int value = hand.getHandValue();
 		return value;
 	}
 	

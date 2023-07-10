@@ -9,34 +9,49 @@ import com.skilldistillery.blackjack.entities.Hand;
 import com.skilldistillery.blackjack.entities.Player;
 
 public class BlackjackApp {
+	static Player bot;
+	static Dealer dealer;
+	static String playerName;
+	static Scanner sc;
 
 	public static void main(String[] args) {
 		BlackjackApp bja = new BlackjackApp();
+		sc = new Scanner(System.in);
+		System.out.println("Enter your name: ");
+		playerName = sc.next();
 
 		bja.launch();
 
 	}
 
 	public void launch() {
-		Scanner sc = new Scanner(System.in);
+
 		BlackjackApp bja = new BlackjackApp();
 		Hand hand = new BlackjackHand();
-		Dealer dealer = new Dealer("Dealer", hand);
-		Player player = new Player("Player", new BlackjackHand());
+		dealer = new Dealer("Dealer", hand);
+		bot = new Player("Billy", new BlackjackHand());
+		Player player = new Player(playerName, new BlackjackHand());
 		Deck deck = new Deck();
+
 		boolean running = true;
+
 		deck.shuffle();
 		dealer.getHand().addCard(deck);
 		dealer.getHand().addCard(deck);
-
 		player.getHand().addCard(deck);
 		player.getHand().addCard(deck);
+		bot.getHand().addCard(deck);
+		bot.getHand().addCard(deck);
 
-		System.out.println("Dealer: ");
+		System.out.println(dealer.getName() + ":");
 		System.out.println("[Card is upsidedown]  " + "[" + dealer.getHand().getCard(0) + "]");
-		System.out.println("Dealer's visible card value: " + dealer.getHand().getCard(0).getValue().getValue());
+		System.out.println(dealer.getName() + "'s card value: " + dealer.getHand().getCard(0).getValue().getValue());
 		System.out.println(" ");
-		System.out.println("Player: ");
+		System.out.println(bot.getName() + ":");
+		System.out.println("[Card is upsidedown]  " + "[" + bot.getHand().getCard(0) + "]");
+		System.out.println(bot.getName() + "'s visible card value: " + bot.getHand().getCard(0).getValue().getValue());
+		System.out.println(" ");
+		System.out.println(playerName + ":");
 		player.viewPlayerHand();
 		player.printHandValue();
 
@@ -44,19 +59,19 @@ public class BlackjackApp {
 
 			if (player.isBlackjack() && !(dealer.isBlackjack())) {
 				printLine();
-				System.out.println("Player beats Dealer with Blackjack!");
+				System.out.println(playerName + " beats Dealer with Blackjack!");
 				subMenu();
 			}
 
 			if (dealer.isBlackjack() && !(player.isBlackjack())) {
 				printLine();
-				System.out.println("Dealer beats Player with Blackjack!");
+				System.out.println("Dealer beats " + playerName + " with Blackjack!");
 				dealer.viewPlayerHand();
 				subMenu();
 			}
 			if (dealer.isBlackjack() && (player.isBlackjack())) {
 				printLine();
-				System.out.println("Push! Both Player and Dealer have Blackjack!");
+				System.out.println("Push! Both players have Blackjack!");
 				dealer.viewPlayerHand();
 				subMenu();
 			}
@@ -98,12 +113,20 @@ public class BlackjackApp {
 		}
 
 		do {
+			bot.getHand().addCard(deck);
+
+		} while (bot.getHandValue() < 16);
+
+		do {
 			dealer.getHand().addCard(deck);
 
 		} while (dealer.getHandValue() < 17);
 		System.out.println("----------End Result----------");
 		dealer.viewPlayerHand();
 		dealer.printHandValue();
+		space();
+		bot.viewPlayerHand();
+		bot.printHandValue();
 		space();
 		player.viewPlayerHand();
 		player.printHandValue();
@@ -114,29 +137,25 @@ public class BlackjackApp {
 
 	public Player determineWinner(Dealer dealer, Player player) {
 		Player theWinner = null;
+		space();
 
 		if (player.isBust() && dealer.isBust()) {
-			space();
-			System.out.println("Both Player and Dealer bust!");
+			System.out.println("Both players bust!");
 
 			theWinner = player;
 		} else if (dealer.isBust()) {
-			space();
-			System.out.println("Dealer busts! Player Wins!");
+			System.out.println("Dealer busts! " + playerName + " wins!");
 
 			theWinner = player;
 		} else if (player.isBust()) {
-			space();
-			System.out.println("Player busts! Dealer Wins!");
+			System.out.println(playerName + " busts! Dealer wins!");
 
 			theWinner = dealer;
 		} else if (player.getHandValue() > dealer.getHandValue()) {
-			space();
-			System.out.println("Player wins!");
+			System.out.println(playerName + " wins!");
 
 			theWinner = player;
 		} else if (dealer.getHandValue() > player.getHandValue()) {
-			space();
 			System.out.println("Dealer wins!");
 
 			theWinner = dealer;
@@ -146,6 +165,7 @@ public class BlackjackApp {
 
 			theWinner = player;
 		}
+		System.out.println(botStatus());
 
 		return theWinner;
 	}
@@ -160,18 +180,47 @@ public class BlackjackApp {
 		}
 
 		if (userSelection == 2) {
-			sc.close();
 			System.out.println("Goodbye!");
+			System.exit(userSelection);
 		}
 		if (userSelection != 1 && userSelection != 2) {
 			System.err.println(
 					"Invalid option. Your selection must be either \"1\" or \"2\": \n Press 1: to hit \n Press 2: to hold ");
 		}
 	}
+
+	public String botStatus() {
+		String status = null;
+		if (bot.getHandValue() > dealer.getHandValue()) {
+			if (!bot.isBust()) {
+				status = "Billy beats dealer";
+			}
+		
+			else {
+				status = "Billy busts";
+			}
+		}
+		else if(dealer.isBust() && !bot.isBust()) {
+			status = "Billy beats dealer";
+		}
+		else if (bot.getHandValue() == dealer.getHandValue()) {
+			if (!bot.isBust()) {
+				status = "Billy ties dealer";
+			} else {
+				status = "Billy busts!";
+			}
+				
+		}
+		else {
+			status = "Billy loses";
+		}
+		return status;
+	}
+
 	public void printLine() {
 		System.out.println("--------------------------------------------");
 	}
-	
+
 	public void space() {
 		System.out.println(" ");
 	}
