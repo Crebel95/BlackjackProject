@@ -12,6 +12,8 @@ public class BlackjackApp {
 	static Player bot;
 	static Dealer dealer;
 	static String playerName;
+	static int playerCash = 500;
+	static int playerBet;
 	static Scanner sc;
 
 	public static void main(String[] args) {
@@ -25,6 +27,7 @@ public class BlackjackApp {
 	}
 
 	public void launch() {
+		playersBet();
 
 		BlackjackApp bja = new BlackjackApp();
 		Hand hand = new BlackjackHand();
@@ -54,6 +57,7 @@ public class BlackjackApp {
 		System.out.println(playerName + ":");
 		player.viewPlayerHand();
 		player.printHandValue();
+		System.out.println("Cash: $" + playerCash);
 
 		if (player.isBlackjack() || dealer.isBlackjack()) {
 
@@ -80,12 +84,12 @@ public class BlackjackApp {
 
 		while (running) {
 
-			if (player.getHandValue() > 21) {
+			if (player.getHandValue() >= 22) {
 				determineWinner(dealer, player);
 				subMenu();
 			}
 
-			if (player.getHandValue() < 21) {
+			if (player.getHandValue() <= 20) {
 				space();
 				System.out.println("Would you like to hit or hold? \n Press 1: hit \n Press 2: hold");
 				int userSelection = sc.nextInt();
@@ -165,6 +169,14 @@ public class BlackjackApp {
 
 			theWinner = player;
 		}
+
+		if (player.getHandValue() == dealer.getHandValue()) {
+			playerCash = playerCash + playerBet;
+		} else if (theWinner.equals(player)) {
+			playerCash = playerCash + (playerBet * 2);
+		}
+
+		System.out.println("Your Cash: $" + playerCash);
 		System.out.println(botStatus());
 
 		return theWinner;
@@ -195,28 +207,42 @@ public class BlackjackApp {
 			if (!bot.isBust()) {
 				status = "Billy beats dealer";
 			}
-		
+
 			else {
 				status = "Billy busts";
 			}
-		}
-		else if(dealer.isBust() && !bot.isBust()) {
+		} else if (dealer.isBust() && !bot.isBust()) {
 			status = "Billy beats dealer";
-		}
-		else if (bot.getHandValue() == dealer.getHandValue()) {
+		} else if (bot.getHandValue() == dealer.getHandValue()) {
 			if (!bot.isBust()) {
 				status = "Billy ties dealer";
 			} else {
 				status = "Billy busts!";
 			}
-				
-		}
-		else {
+
+		} else {
 			status = "Billy loses";
 		}
 		return status;
 	}
 
+	private void playersBet() {
+		boolean badBet = true;
+		while (true) {
+
+			System.out.println(
+					" How much would you like to bet? (Whole numbers only) \n Current holdings: $" + playerCash);
+			playerBet = sc.nextInt();
+			if (playerBet > playerCash) {
+				System.err.print("Invalid bet. Select a number within " + playerCash);
+				playerBet = 0;
+				playersBet();
+			}
+			playerCash = playerCash - playerBet;
+			break;
+		}
+	}
+	
 	public void printLine() {
 		System.out.println("--------------------------------------------");
 	}
